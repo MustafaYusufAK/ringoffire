@@ -1,0 +1,81 @@
+@import '../../../mixin.scss';
+
+.animation-class {
+    animation: buttonScale 1.5s infinite;
+
+    &:hover {
+        filter: brightness(1.5);
+        cursor: pointer;
+    }
+}
+
+.start-screen {
+    background-color: #404040;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    @include dFlex($d: flex, $jc: center, $ai: center);
+
+    >img {
+        filter: blur(5px);
+        width: 100vw;
+        height: 100vh;
+    }
+}
+
+.honors-club-bg {
+    top: 102px;
+    left: 48px;
+    right: 0;
+    // bottom: 50px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+
+    >img {
+        height: 50vh;
+    }
+}
+
+.start-image {
+    left: 48px;
+    right: 0;
+    // bottom: 50px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+
+    >img {
+        height: 50vh;
+    }
+}
+
+h1 {
+    left: 0;
+    right: 0;
+    // bottom: 50px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    color: red;
+    text-decoration: wavy;
+
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+@keyframes buttonScale {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}

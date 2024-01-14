@@ -1,0 +1,18 @@
+@import '../../../mixin.scss';
+
+.field {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    background-image: url("/assets/board.jpg");
+    @include dFlex($d: flex, $jc: center, $ai: center);
+}
+
+.card-stack {
+    position: relative;
+
+    img {
+        position: absolute;
+        width: 120px;
+    }
+}
