@@ -6,6 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
+import { GameInfoComponent } from '../game-info/game-info.component';
+
 
 
 @Component({
@@ -14,7 +16,8 @@ import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player
   imports: [CommonModule,
     PlayerComponent,
     MatButtonModule,
-    MatIconModule],
+    MatIconModule,
+    GameInfoComponent],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
@@ -55,6 +58,9 @@ export class GameComponent implements OnInit {
         this.pickCardAnimation = false;
       }, 1000);
     }
+
+    this.game.currentPlayer++;
+    this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
   }
 
   openDialog(): void {
