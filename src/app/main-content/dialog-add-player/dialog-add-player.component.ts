@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms'; // Wichtig: FormsModule importieren
 import { MatInputModule } from '@angular/material/input';
@@ -13,7 +14,8 @@ import { MatInputModule } from '@angular/material/input';
   imports: [MatDialogModule,
     MatFormFieldModule,
     FormsModule,
-    MatInputModule],
+    MatInputModule,
+    CommonModule],
   templateUrl: './dialog-add-player.component.html',
   styleUrl: './dialog-add-player.component.scss'
 })

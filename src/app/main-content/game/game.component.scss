@@ -4,7 +4,7 @@
     width: 100vw;
     height: 100vh;
     max-width: 100%;
-    background-image: url("/assets/board.jpg");
+    background-image: url("../../../assets/img/board.jpg");
     @include dFlex($d: flex, $jc: center, $ai: center);
 }
 
