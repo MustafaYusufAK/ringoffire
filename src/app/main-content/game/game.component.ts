@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Game } from '../../../models/game';
 import { PlayerComponent } from '../player/player.component';
@@ -8,7 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { GameInfoComponent } from '../game-info/game-info.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-
+import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -29,11 +30,25 @@ export class GameComponent implements OnInit {
   currentCard: string = '';
   game = new Game();
 
-  constructor(public dialog: MatDialog) { }
+  constructor(private firestore: Firestore = inject(Firestore), public dialog: MatDialog) {
+
+
+  }
+
+
+  getCollection() {
+    const aCollection = collection(this.firestore, 'games');
+
+    collectionData(aCollection).subscribe((games: any[]) => {
+      console.log('Game update', games);
+    });
+  }
+
 
 
   ngOnInit(): void {
     this.newGame();
+    this.getCollection();
   }
 
   newGame() {
