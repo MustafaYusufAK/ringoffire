@@ -8,8 +8,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { GameInfoComponent } from '../game-info/game-info.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, addDoc, doc, getDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -30,17 +31,54 @@ export class GameComponent implements OnInit {
   currentCard: string = '';
   game = new Game();
 
-  constructor(private firestore: Firestore = inject(Firestore), public dialog: MatDialog) {
+  constructor(private route: ActivatedRoute, private firestore: Firestore = inject(Firestore), public dialog: MatDialog) {
 
 
   }
 
 
-  getCollection() {
-    const aCollection = collection(this.firestore, 'games');
+  // getCollection() {
 
-    collectionData(aCollection).subscribe((games: any[]) => {
-      console.log('Game update', games);
+
+  //   this.route.params.subscribe((params: any) => {
+  //     console.log(params.id);
+  //     const aCollection = doc(collection(this.firestore, 'games'), params.id);
+  //     console.log(aCollection);
+
+
+  //     // collectionData(aCollection).subscribe((games: any[]) => {
+  //     //   console.log('Game update', games);
+  //     //   console.log("Document written with ID: ", aCollection.id);
+  //     // });
+  //   });
+
+  // }
+
+  getCollection() {
+    this.route.params.subscribe((params: any) => {
+      console.log(params.id);
+      const docRef = doc(collection(this.firestore, 'games'), params.id);
+
+      getDoc(docRef).then((docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const game: any = docSnapshot.data();
+          // Verwende eine Arrow-Funktion hier
+          const displayGameData = (gameData: any) => {
+            console.log('Game update:', gameData);
+            this.game.currentPlayer = gameData.currentPlayer;
+            this.game.playedCards = gameData.playedCards;
+            this.game.players = gameData.players;
+            this.game.stack = gameData.stack;
+          };
+
+          // Rufe die Arrow-Funktion auf und übergebe die Daten
+          displayGameData(game);
+        } else {
+          console.log('Document does not exist');
+        }
+      }).catch((error) => {
+        console.error('Error getting document:', error);
+      });
     });
   }
 
@@ -49,10 +87,13 @@ export class GameComponent implements OnInit {
   ngOnInit(): void {
     this.newGame();
     this.getCollection();
+
   }
 
-  newGame() {
+  async newGame() {
     this.game;
+    // const docRef = await addDoc(collection(this.firestore, "games"), this.game.toJson());
+    // console.log("Document written with ID: ", docRef.id);
   }
 
   takeCard() {
