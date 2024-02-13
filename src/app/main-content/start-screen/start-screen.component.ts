@@ -18,11 +18,16 @@ export class StartScreenComponent {
   }
 
   async newGame() {
-    //Start Game
-    const docRef = await addDoc(collection(this.firestore, "games"), this.game.toJson());
-    console.log("Document written with ID: ", docRef.id);
+    try {
+      // Start Game
+      const docRef = await addDoc(collection(this.firestore, 'games'), this.game.toJson());
+      console.log("Document written with ID: ", docRef.id);
 
-    this.router.navigateByUrl('/game/' + docRef.id);
+      this.router.navigateByUrl('/game/' + docRef.id);
+    } catch (error) {
+      console.error('Error creating new game:', error);
+      // Hier kannst du eine Benachrichtigung für den Benutzer hinzufügen, dass etwas schief gelaufen ist.
+    }
   }
 
 }

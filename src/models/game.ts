@@ -23,7 +23,7 @@ export class Game {
         return {
             players: this.players,
             stack: this.stack,
-            playerCards: this.playedCards,
+            playedCards: this.playedCards,
             currentPlayer: this.currentPlayer,
             pickCardAnimation: this.pickCardAnimation,
             currentCard: this.currentCard
