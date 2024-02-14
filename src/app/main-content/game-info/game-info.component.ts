@@ -29,19 +29,29 @@ export class GameInfoComponent implements OnInit, OnChanges {
   title: string = '';
   description: string = '';
   @Input() card: string = '';
+  // New property to track the current state
+  isCardSelected: boolean = false;
+
 
   constructor() { }
 
   ngOnInit(): void {
-
+    this.updateInfo();
   }
 
   ngOnChanges() {
+    this.updateInfo();
+  }
+
+  private updateInfo() {
     if (this.card) {
-      console.log('currentCard:', this.card);
       let cardNumber = +this.card.split('_')[1];
       this.title = this.cardAction[cardNumber - 1].title;
       this.description = this.cardAction[cardNumber - 1].description;
+      this.isCardSelected = true; // Set the state to true when a card is selected
+    } else {
+      this.isCardSelected = false; // Reset the state when no card is selected
     }
   }
+
 }

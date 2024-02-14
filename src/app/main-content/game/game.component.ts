@@ -8,10 +8,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { GameInfoComponent } from '../game-info/game-info.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { Firestore, collection, collectionData, addDoc, doc, getDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, doc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { onSnapshot } from "firebase/firestore";
+import { MatCardModule } from '@angular/material/card';
 
 
 @Component({
@@ -22,7 +23,8 @@ import { onSnapshot } from "firebase/firestore";
     MatButtonModule,
     MatIconModule,
     GameInfoComponent,
-    MatButtonToggleModule],
+    MatButtonToggleModule,
+    MatCardModule],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
@@ -30,17 +32,44 @@ import { onSnapshot } from "firebase/firestore";
 export class GameComponent implements OnInit {
 
   game = new Game();
+  gameInfo = new GameInfoComponent();
   gameId: string = '';
+  private docUnsubscribe: any;
 
-  constructor(private route: ActivatedRoute, private firestore: Firestore = inject(Firestore), public dialog: MatDialog) {
 
+  constructor(private route: ActivatedRoute, private firestore: Firestore = inject(Firestore), public dialog: MatDialog) { }
 
+  ngOnInit(): void {
+    this.newGame();
+    this.route.params.subscribe(async (params: any) => {
+      console.log(params.id);
+      this.gameId = params.id;
+
+      // Unsubscribe from previous snapshot listener, if any
+      if (this.docUnsubscribe) {
+        this.docUnsubscribe();
+      }
+
+      // Subscribe to changes in the document
+      this.docUnsubscribe = onSnapshot(doc(this.getGamesRef(), this.gameId), (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const gameData: any = docSnapshot.data();
+          this.displayGameData(gameData);
+        } else {
+          console.log('Document does not exist');
+        }
+      });
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.docUnsubscribe) {
+      this.docUnsubscribe();
+    }
   }
 
 
   // getCollection() {
-
-
   //   this.route.params.subscribe((params: any) => {
   //     console.log(params.id);
   //     const aCollection = doc(collection(this.firestore, 'games'), params.id);
@@ -52,29 +81,28 @@ export class GameComponent implements OnInit {
   //     //   console.log("Document written with ID: ", aCollection.id);
   //     // });
   //   });
-
   // }
 
-  async getCollection() {
-    this.route.params.subscribe(async (params: any) => {
-      console.log(params.id);
-      this.gameId = params.id;
-      const docRef = doc(collection(this.firestore, 'games'), this.gameId);
+  // async getCollection() {
+  //   this.route.params.subscribe(async (params: any) => {
+  //     console.log(params.id);
+  //     this.gameId = params.id;
+  //     const docRef = doc(collection(this.firestore, 'games'), this.gameId);
 
-      try {
-        const docSnapshot = await getDoc(docRef);
+  //     try {
+  //       const docSnapshot = await getDoc(docRef);
 
-        if (docSnapshot.exists()) {
-          const gameData: any = docSnapshot.data();
-          this.displayGameData(gameData);
-        } else {
-          console.log('Document does not exist');
-        }
-      } catch (error) {
-        console.error('Error getting document:', error);
-      }
-    });
-  }
+  //       if (docSnapshot.exists()) {
+  //         const gameData: any = docSnapshot.data();
+  //         this.displayGameData(gameData);
+  //       } else {
+  //         console.log('Document does not exist');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error getting document:', error);
+  //     }
+  //   });
+  // }
 
   displayGameData(gameData: any) {
     console.log('Game update:', gameData);
@@ -86,12 +114,6 @@ export class GameComponent implements OnInit {
     this.game.currentCard = gameData.currentCard;
   }
 
-
-  ngOnInit(): void {
-    this.newGame();
-    this.getCollection();
-
-  }
 
   newGame() {
     this.game;
@@ -117,7 +139,7 @@ export class GameComponent implements OnInit {
       setTimeout(() => {
         this.game.playedCards.push(this.game.currentCard);
         this.game.pickCardAnimation = false;
-
+        this.saveGames();
       }, 1000);
     }
 
@@ -133,35 +155,38 @@ export class GameComponent implements OnInit {
       if (name && name.length > 0) {
         this.game.players.push(name);
         this.saveGames();
+
+        // Reset the state to show the default message
+        this.gameInfo.isCardSelected = false;
       }
     });
   }
+
 
   saveGames() {
     this.updateTheDoc()
   }
 
+
   async updateTheDoc() {
-    const docRef = doc(collection(this.firestore, "games"), this.gameId);
-
-
+    const docRef = doc(this.getGamesRef(), this.gameId);
 
     const updatedData = {
       players: this.game.players || [],
       stack: this.game.stack || [],
       playedCards: this.game.playedCards || [],
-      currentPlayer: this.game.currentPlayer || 0
+      currentPlayer: this.game.currentPlayer || 0,
+      currentCard: this.game.currentCard || [],
+      pickCardAnimation: this.game.pickCardAnimation
     };
 
+    // Update the document
     await updateDoc(docRef, updatedData);
-
-    console.log("Document updated with ID: ", docRef.id);
   }
 
-
-
-
-
+  getGamesRef() {
+    return collection(this.firestore, 'games');
+  }
 
 }
 
