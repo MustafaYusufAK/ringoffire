@@ -2,6 +2,8 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router'; // Richtiges Modul importieren
 import { Firestore, collection, collectionData, addDoc, doc, getDoc } from '@angular/fire/firestore';
 import { Game } from '../../../models/game';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-start-screen',
@@ -12,9 +14,16 @@ import { Game } from '../../../models/game';
 })
 export class StartScreenComponent {
   game = new Game();
+  backgroundUrl: SafeStyle = '';
 
-  constructor(private router: Router, private firestore: Firestore = inject(Firestore),) {
 
+  constructor(private sanitizer: DomSanitizer, private router: Router, private firestore: Firestore = inject(Firestore),) {
+
+  }
+
+  ngOnInit(): void {
+    const imageUrl = '../../../assets/start-background.jpg';
+    this.backgroundUrl = this.sanitizer.bypassSecurityTrustStyle(`url(${imageUrl})`);
   }
 
   async newGame() {

@@ -1,10 +1,11 @@
 <div class="start-screen">
-    <img src="assets/start-background.jpg" alt="">
-    <div class="honors-club-bg">
-        <img class="animation-class" src="assets/img/cards/honor_heart-14.png" alt="">
+    <div class="background-image" [style.background-image]="backgroundUrl"></div>
+    <div class="both-pics">
+        <div class="honors-club-bg">
+            <img class="animation-class" src="assets/img/cards/honor_heart-14.png" alt="">
+        </div>
+        <div class="start-image">
+            <img (click)="newGame()" class="animation-class" src="assets/start-image.png" alt="">
+        </div>
     </div>
-    <div class="start-image">
-        <img (click)="newGame()" class="animation-class" src="assets/start-image.png" alt="">
-    </div>
-    <h1 (click)="newGame()">Start Me</h1>
 </div>

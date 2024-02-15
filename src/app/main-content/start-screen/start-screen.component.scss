@@ -14,37 +14,89 @@
     width: 100vw;
     height: 100vh;
     max-width: 100%;
+    background-size: cover;
     @include dFlex($d: flex, $jc: center, $ai: center);
+}
 
-    >img {
-        filter: blur(5px);
-        width: 100vw;
-        height: 100vh;
-    }
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    filter: blur(4px);
+}
+
+.both-pics {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1;
 }
 
 .honors-club-bg {
-    top: 102px;
-    left: 48px;
-    right: 0;
-    position: absolute;
-    display: flex;
-    justify-content: center;
 
     >img {
         height: 50vh;
+        height: 50vh;
+        margin-bottom: -286px;
+    }
+
+    @media (max-width: 960px) {
+        >img {
+            height: 36vh;
+            margin-bottom: -192px;
+        }
+    }
+
+    @media (max-width: 590px) {
+        >img {
+            height: 24vh;
+            margin-bottom: -142px;
+        }
+    }
+
+    @media (max-width: 350px) {
+        >img {
+            height: 21vh;
+            margin-bottom: -120px;
+        }
+    }
+
+    @media screen and (min-width: 912px) and (min-height: 1368px) {
+
+        /* Stile für Geräte mit einer Bildschirmauflösung von 912x1368 */
+        >img {
+            height: 32vh;
+            margin-bottom: -256px;
+        }
     }
 }
 
-.start-image {
-    left: 48px;
-    right: 0;
-    position: absolute;
-    display: flex;
-    justify-content: center;
 
+.start-image {
     >img {
         height: 50vh;
+    }
+
+    @media (max-width: 960px) {
+        >img {
+            height: 36vh;
+        }
+    }
+
+    @media (max-width: 590px) {
+        >img {
+            height: 25vh;
+        }
+    }
+
+    @media (max-width: 350px) {
+        >img {
+            height: 21vh;
+        }
     }
 }
 
@@ -56,7 +108,6 @@ h1 {
     justify-content: center;
     color: red;
     text-decoration: wavy;
-
 
     &:hover {
         cursor: pointer;
